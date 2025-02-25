@@ -62,15 +62,16 @@ namespace imperium_lang {
         int tokenize(std::vector<Token>& tokens);
     private:
         /**
-         * @brief Refills the internal buffer with the next content from the source
+         * @brief Fills the internal buffer with the next content from the source
          *        file, if the file has not already been fully read
          * 
          * @param[out] bytesRead Number of bytes read
          * @return Status code
          * @retval 0 Success
+         * @retval 1 End of file reached
          * @retval -1 Read Error
          */
-        int refillBuffer(int& bytesRead);
+        int fillBuffer(int& bytesRead);
     };
 
 }

@@ -1,7 +1,7 @@
 /**
  * @file tokenizer.hpp
  * 
- * @brief Include file for tokenizer class
+ * @brief Include file for tokenizer class and related types
  */
 
 #ifndef TOKENIZER_HPP

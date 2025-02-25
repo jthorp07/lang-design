@@ -7,8 +7,9 @@
 #ifndef TOKENIZER_HPP
 #define TOKENIZER_HPP
 
-#include <string>
 #include <array>
+#include <string>
+#include <string_view>
 #include <vector>
 
 namespace imperium_lang {
@@ -62,16 +63,17 @@ namespace imperium_lang {
         int tokenize(std::vector<Token>& tokens);
     private:
         /**
-         * @brief Fills the internal buffer with the next content from the source
-         *        file, if the file has not already been fully read
+         * @brief Shifts unprocessed data to the start of the buffer, then refills
+         *        the buffer with the next data from the source file.
          * 
+         * @param[in, out] unprocessed View of unprocessed data
          * @param[out] bytesRead Number of bytes read
          * @return Status code
          * @retval 0 Success
          * @retval 1 End of file reached
          * @retval -1 Read Error
          */
-        int fillBuffer(int& bytesRead);
+        virtual int refillBuffer(std::string_view& unprocessed, int& bytesRead);
     };
 
 }

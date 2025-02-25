@@ -70,7 +70,7 @@ namespace imperium_lang {
          * @retval 0 Success
          * @retval -1 Read Error
          */
-        int refillBuffer(int bytesRead);
+        int refillBuffer(int& bytesRead);
     };
 
 }

@@ -15,6 +15,18 @@ namespace imperium_lang {
     constexpr int BLOCK_SIZE = 4096;
     constexpr int BUFFER_SIZE = BLOCK_SIZE * 16 * 16;
 
+    enum TokenType {
+        KEYWORD,
+        IDENTIFIER,
+        OPERATOR,
+        LITERAL,
+        COMMENT,
+        WHITESPACE,
+        NEWLINE,
+        END_OF_FILE,
+        DELIMITER,
+    };
+
     /**
      * @brief Tokenizer class
      * 

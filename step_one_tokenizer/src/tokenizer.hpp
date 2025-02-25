@@ -23,7 +23,7 @@ namespace imperium_lang {
     class Tokenizer {
     private:
         const std::string sourceFile;
-        std::array<char, BUFFER_SIZE> buffer;
+        std::array<char, BUFFER_SIZE> buffer{};
     public:
         /**
          * @brief Constructor

@@ -33,19 +33,12 @@ namespace imperium_lang {
         Tokenizer(const std::string& sourceFile);
 
         /**
-         * @brief Destructor
-         * 
-         * Clean up internal buffer and file stream
-         */
-        ~Tokenizer();
-
-        /**
          * @brief Tokenize the source file
          * 
          * @param[out] tokens The tokens extracted from the source file
          * @return Status code
          * @retval 0 Success
-         * @retval -1 Parse Error: Failed to create a token
+         * @retval -1 Parse Error
          * @retval -2 Read Error
          */
         int tokenize(auto& tokens);

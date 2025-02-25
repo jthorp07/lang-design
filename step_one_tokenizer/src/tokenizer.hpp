@@ -9,6 +9,7 @@
 
 #include <string>
 #include <array>
+#include <vector>
 
 namespace imperium_lang {
 
@@ -58,7 +59,7 @@ namespace imperium_lang {
          * @retval -1 Parse Error
          * @retval -2 Read Error
          */
-        int tokenize(auto& tokens);
+        int tokenize(std::vector<Token>& tokens);
     private:
         /**
          * @brief Refills the internal buffer with the next content from the source

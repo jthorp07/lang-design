@@ -1,0 +1,5 @@
+# IDE: VS Code
+.vscode
+
+# Directory: ~/build (reserved local out dir)
+build

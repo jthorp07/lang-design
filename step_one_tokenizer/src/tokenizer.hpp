@@ -27,6 +27,11 @@ namespace imperium_lang {
         DELIMITER,
     };
 
+    struct Token {
+        const TokenType type;
+        const std::string value;
+    };
+
     /**
      * @brief Tokenizer class
      * 

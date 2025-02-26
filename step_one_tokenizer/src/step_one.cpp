@@ -18,5 +18,15 @@ int main() {
         return status;
     }
 
+    // Output token data
+    if (tokens.empty()) {
+        std::cout << "No tokens were returned.\n";
+    } else {
+        std::cout << "Tokens:\n";
+        for (const auto& token : tokens) {
+            std::cout << "Type: " << imperium_lang::tokenTypeToString(token.type) << ", Value: " << token.value << "\n";
+        }
+    }
+
     return 0;
 }

@@ -112,7 +112,7 @@ namespace imperium_lang {
         std::copy(unprocessed.begin(), unprocessed.end(), buffer.begin());
 
         /** @todo Read new data into buffer */
-        source.read(buffer, BUFFER_SIZE - unprocessed.size());
+        source.read(buffer.data() + unprocessed.size(), BUFFER_SIZE - unprocessed.size());
         bytesRead = source.gcount();
         if (bytesRead <= 0) {
             std::cerr << "Error: Failed to read from source file.\n";

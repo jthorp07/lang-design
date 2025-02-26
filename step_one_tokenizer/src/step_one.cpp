@@ -10,6 +10,7 @@
 
 int main() {
 
+    // Extract tokens from demo file
     imperium_lang::Tokenizer tokenizer{"step_one_test.imp"};
     std::vector<imperium_lang::Token> tokens{};
     const auto status = tokenizer.tokenize(tokens);

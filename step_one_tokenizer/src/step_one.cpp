@@ -16,7 +16,7 @@ int main() {
     const auto status = tokenizer.tokenize(tokens);
     if (status != 0) {
         std::cerr << "Error: Tokenization failed.\n";
-        return status;
+        return -1;
     }
 
     // Output token data

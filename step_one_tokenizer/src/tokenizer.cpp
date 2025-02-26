@@ -109,7 +109,7 @@ namespace imperium_lang {
     int Tokenizer::refillBuffer(std::string_view& unprocessed, int& bytesRead, auto& source) {
 
         /** @todo Move all unprocessed data to start of buffer */
-        std::copy(unprocessed.begin(), unprocessed.end(), buffer.begin());
+        std::copy(unprocessed.cbegin(), unprocessed.cend(), buffer.cbegin());
 
         /** @todo Read new data into buffer */
         source.read(buffer.data() + unprocessed.size(), BUFFER_SIZE - unprocessed.size());
@@ -120,7 +120,7 @@ namespace imperium_lang {
         }
 
         /** @todo Reassign unprocessed to cover all content in buffer */
-        unprocessed = std::string_view(buffer.begin(), unprocessed.size() + bytesRead);
+        unprocessed = std::string_view(buffer.cbegin(), unprocessed.size() + bytesRead);
         if (source.eof()) {
             return 1;
         }

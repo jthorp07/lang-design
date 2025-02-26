@@ -1,7 +1,7 @@
 # An Unnamed Language
 
 This repository is intended to document my personal journey of designing a programming language,
-a compilor and maybe interpretor for the language, an IDE or VSCode extension for the language,
+a compiler and maybe interpretor for the language, an IDE or VSCode extension for the language,
 and a package manager for the language. The root README will contain my preliminary hopes for 
 what the final "product" should look like, and the rest of the story will be documented in the
 repository's wiki.

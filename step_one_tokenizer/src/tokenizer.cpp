@@ -5,6 +5,9 @@
  */
 
 #include "tokenizer.hpp"
+#include <algorithm>
+#include <fstream>
+#include <iostream>
 #include <string>
 #include <string_view>
 #include <unordered_set>
@@ -85,18 +88,30 @@ namespace imperium_lang {
      * 
      * @param[in, out] unprocessed View of unprocessed data
      * @param[out] bytesRead Number of bytes read
+     * @param[in] source The source stream to read from
      * @return Status code
      * @retval 0 Success
      * @retval 1 End of file reached
      * @retval -1 Read Error
      */
-    int Tokenizer::refillBuffer(std::string_view& unprocessed, int& bytesRead) {
+    int Tokenizer::refillBuffer(std::string_view& unprocessed, int& bytesRead, auto& source) {
 
         /** @todo Move all unprocessed data to start of buffer */
+        std::copy(unprocessed.begin(), unprocessed.end(), buffer.begin());
 
         /** @todo Read new data into buffer */
+        source.read(buffer, BUFFER_SIZE - unprocessed.size());
+        bytesRead = source.gcount();
+        if (bytesRead <= 0) {
+            std::cerr << "Error: Failed to read from source file.\n";
+            return -1;
+        }
 
         /** @todo Reassign unprocessed to cover all content in buffer */
+        unprocessed = std::string_view(buffer.begin(), unprocessed.size() + bytesRead);
+        if (source.eof()) {
+            return 1;
+        }
 
         return 0;
     }

@@ -95,7 +95,7 @@ namespace imperium_lang {
          * @retval 1 End of file reached
          * @retval -1 Read Error
          */
-        virtual int refillBuffer(std::string_view& unprocessed, int& bytesRead);
+        int refillBuffer(std::string_view& unprocessed, int& bytesRead, auto& source);
     };
 
 }

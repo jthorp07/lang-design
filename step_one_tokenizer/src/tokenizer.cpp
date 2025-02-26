@@ -5,6 +5,27 @@
  */
 
 #include "tokenizer.hpp"
+#include <string>
+#include <string_view>
+#include <unordered_set>
+
+// Allow the use of string_view literals
+using namespace std::literals::string_view_literals;
+
+namespace {
+    static const std::unordered_set<std::string_view> KEYWORD_TOKENS{
+        "if"sv, "else"sv, "while"sv, "for"sv, "return"sv, "function"sv, "var"sv, "const"sv,
+        "class"sv, "import"sv, "export"sv
+    };
+
+    static const std::unordered_set<std::string_view> OPERATOR_TOKENS{
+        "+"sv, "-"sv, "*"sv, "/"sv, "%"sv, "="sv, "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
+    };
+
+    static const std::unordered_set<std::string_view> DELIMITER_TOKENS{
+        ";"sv, ","sv, "."sv, "("sv, ")"sv, "{"sv, "}"sv, "["sv, "]"sv
+    };
+}
 
 namespace imperium_lang {
 
@@ -27,7 +48,7 @@ namespace imperium_lang {
     int Tokenizer::tokenize(std::vector<Token>& tokens) {
 
         tokens.clear();
-
+        
         /** 
             @todo Implement the tokenization algorithm
 

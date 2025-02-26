@@ -65,11 +65,23 @@ namespace imperium_lang {
         */
 
         /** @todo Open stream to source file */
-
+        std::ifstream source(sourceFile);
+        if (!source) {
+            std::cerr << "Error: Failed to open source file.\n";
+            return -2;
+        }
+    
         /** @todo Initialize buffer with start of source data */
+        int bytesRead;
+        std::string_view unprocessed;
+        auto refillStatus = refillBuffer(unprocessed, bytesRead, source);
+        if (refillStatus == -1) {
+            std::cerr << "Error: Failed to read from source file.\n";
+            return -2;
+        }
 
         /** @todo Finish main parse loop */
-        bool doneReading = false;
+        bool doneReading = refillStatus == 1;;
         while (true) {
             /** @todo Parse tokens from start of content */
 

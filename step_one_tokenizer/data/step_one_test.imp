@@ -1,0 +1,9 @@
+/**
+ * @file step_one_test.imp
+ *
+ * @brief A simple Imperium Lang source code file.
+ */
+int main(int argc, array<char> argv) {
+    string my_string = "Hello World!";
+    return 0;
+}

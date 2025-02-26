@@ -29,6 +29,28 @@ namespace imperium_lang {
         DELIMITER,
     };
 
+    /**
+     * @brief Provides the string name of a `TokenType`
+     * 
+     * @param[in] type The `TokenType` to get the name of
+     * @return The string name of the `TokenType`
+     * @retval "unknown" The token is not a known TokenType
+     */
+    constexpr std::string tokenTypeToString(TokenType type) {
+        switch (type) {
+            case KEYWORD: return "keyword";
+            case IDENTIFIER: return "identifier";
+            case OPERATOR: return "operator";
+            case LITERAL: return "literal";
+            case COMMENT: return "comment";
+            case WHITESPACE: return "whitespace";
+            case NEWLINE: return "newline";
+            case END_OF_FILE: return "end-of-file";
+            case DELIMITER: return "delimiter";
+            default: return "unknown";
+        }
+    }
+
     struct Token {
         const TokenType type;
         const std::string value;

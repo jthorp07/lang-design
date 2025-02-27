@@ -157,6 +157,18 @@ namespace imperium_lang {
     int Tokenizer::extractFirstToken(std::string_view& unprocessed, Token& token, int& bytesRead) {
 
         /** @todo Identify type of token to parse */
+        TokenType type;
+        if (unprocessed.find_first_of(WHITESPACE) == 0) {
+            type = TokenType::Whitespace;
+        } else if (unprocessed.find_first_of(DELIMITER) == 0 && unprocessed[1] == '=') {
+            type = TokenType::Delimiter;
+        } else if (false) {
+            type = TokenType::Operator;
+        } else if (false) {
+            type = TokenType::Keyword;
+        } else {
+            type = TokenType::Identifier;
+        }
 
         /** @todo Parse token */
 

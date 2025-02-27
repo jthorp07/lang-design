@@ -27,6 +27,7 @@ namespace {
     };
 
     constexpr auto DELIMITER = ";,.(){}[]"sv;
+    constexpr auto WHITESPACE = " \n\t\r"sv;
 }
 
 namespace imperium_lang {

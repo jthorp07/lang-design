@@ -24,7 +24,6 @@ namespace imperium_lang {
         LITERAL,
         COMMENT,
         WHITESPACE,
-        NEWLINE,
         END_OF_FILE,
         DELIMITER,
     };
@@ -44,7 +43,6 @@ namespace imperium_lang {
             case LITERAL: return "literal";
             case COMMENT: return "comment";
             case WHITESPACE: return "whitespace";
-            case NEWLINE: return "newline";
             case END_OF_FILE: return "end-of-file";
             case DELIMITER: return "delimiter";
             default: return "unknown";

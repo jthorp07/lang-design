@@ -8,10 +8,14 @@
 #include <vector>
 #include "tokenizer.hpp"
 
-int main() {
+int main(int argc, char** argv) {
 
     // Extract tokens from demo file
-    imperium_lang::Tokenizer tokenizer{"step_one_test.imp"};
+    if (argc < 2) {
+        std::cerr << "Error: No source file provided.\n";
+        return 1;
+    }
+    imperium_lang::Tokenizer tokenizer{argv[1]};
     std::vector<imperium_lang::Token> tokens{};
     const auto status = tokenizer.tokenize(tokens);
     if (status != 0) {

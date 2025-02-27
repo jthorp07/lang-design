@@ -16,14 +16,28 @@
 using namespace std::literals::string_view_literals;
 
 namespace {
-    constexpr std::array<std::string_view, 11> KEYWORD_TOKENS{
-        "if"sv, "else"sv, "while"sv, "for"sv, "return"sv, "function"sv, "var"sv, "const"sv,
-        "class"sv, "import"sv, "export"sv
+    constexpr auto KEYWORD_TOKENS = {
+        /* Control Flow */
+        "if"sv, "else"sv, "while"sv, "for"sv, "return"sv,
+        /* Declaration */
+        "class"sv, "function"sv, "var"sv,
+        /* Primitive Types */
+        "int"sv, "string"sv, "bool"sv, "char"sv, "float"sv, "array"sv
+        /* Type Modifiers */
+        "const"sv, "static"sv, "ptr"sv, "ref"sv
+        /* Compilation Unit Control */
+        "import"sv, "export"sv, "library"sv, 
     };
 
-    constexpr std::array<std::string_view, 14> OPERATOR_TOKENS{
-        "+"sv, "-"sv, "*"sv, "/"sv, "%"sv, "="sv, "=="sv, "!="sv, "<"sv, "<="sv, ">"sv,
-        ">="sv, "&&"sv, "||"sv
+    constexpr auto OPERATOR_TOKENS = {
+        /* Arithmetic */
+        "+"sv, "-"sv, "*"sv, "/"sv, "%"sv,
+        /* Mutator */
+        "="sv, "++"sv, "--"sv,
+        /* Bitwise */
+        "&"sv, "|"sv, "^"sv, "~"sv,
+        /* Boolean */
+        "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
     };
 
     constexpr auto DELIMITER = ";,.(){}[]"sv;

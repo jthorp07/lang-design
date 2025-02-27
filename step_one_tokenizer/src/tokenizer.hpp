@@ -18,14 +18,14 @@ namespace imperium_lang {
     constexpr int BUFFER_SIZE = BLOCK_SIZE * 16 * 16;
 
     enum TokenType {
-        KEYWORD,
-        IDENTIFIER,
-        OPERATOR,
-        LITERAL,
-        COMMENT,
-        WHITESPACE,
-        END_OF_FILE,
-        DELIMITER,
+        Keyword,
+        Identifier,
+        Operator,
+        Literal,
+        Comment,
+        Whitespace,
+        EndOfFile,
+        Delimiter,
     };
 
     /**
@@ -37,14 +37,14 @@ namespace imperium_lang {
      */
     constexpr std::string tokenTypeToString(TokenType type) {
         switch (type) {
-            case KEYWORD: return "keyword";
-            case IDENTIFIER: return "identifier";
-            case OPERATOR: return "operator";
-            case LITERAL: return "literal";
-            case COMMENT: return "comment";
-            case WHITESPACE: return "whitespace";
-            case END_OF_FILE: return "end-of-file";
-            case DELIMITER: return "delimiter";
+            case Keyword: return "keyword";
+            case Identifier: return "identifier";
+            case Operator: return "operator";
+            case Literal: return "literal";
+            case Comment: return "comment";
+            case Whitespace: return "whitespace";
+            case EndOfFile: return "end-of-file";
+            case Delimiter: return "delimiter";
             default: return "unknown";
         }
     }

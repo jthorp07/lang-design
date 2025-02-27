@@ -42,6 +42,53 @@ namespace {
 
     constexpr auto DELIMITER = ";,.(){}[]"sv;
     constexpr auto WHITESPACE = " \n\t\r"sv;
+
+        /**
+     * @brief Extracts the next token from the buffer
+     * 
+     * @param[in, out] unprocessed View of unprocessed data
+     * @param[out] token The extracted token
+     * @param[out] bytesRead Number of bytes read
+     * @return Status code
+     * @retval 0 Success
+     * @retval 1 End of file reached
+     * @retval -1 Parse Error
+     * @retval -2 Read Error
+     */
+    int extractFirstToken(std::string_view& unprocessed, imperium_lang::Token& token, int& bytesRead);
+
+    /**
+     * @brief Extracts the next token from the buffer
+     * 
+     * @param[in, out] unprocessed View of unprocessed data
+     * @param[out] token The extracted token
+     * @param[out] bytesRead Number of bytes read
+     * @return Status code
+     * @retval 0 Success
+     * @retval 1 End of file reached
+     * @retval -1 Parse Error
+     * @retval -2 Read Error
+     */
+    int extractFirstToken(std::string_view& unprocessed, imperium_lang::Token& token, int& bytesRead) {
+
+        /** @todo Identify type of token to parse */
+        imperium_lang::TokenType type;
+        if (unprocessed.find_first_of(WHITESPACE) == 0) {
+            type = imperium_lang::TokenType::Whitespace;
+        } else if (unprocessed.find_first_of(DELIMITER) == 0 && unprocessed[1] == '=') {
+            type = imperium_lang::TokenType::Delimiter;
+        } else if (false) {
+            type = imperium_lang::TokenType::Operator;
+        } else if (false) {
+            type = imperium_lang::TokenType::Keyword;
+        } else {
+            type = imperium_lang::TokenType::Identifier;
+        }
+
+        /** @todo Parse token */
+
+        return 0;
+    }
 }
 
 namespace imperium_lang {
@@ -142,36 +189,4 @@ namespace imperium_lang {
         return 0;
     }
 
-    /**
-     * @brief Extracts the next token from the buffer
-     * 
-     * @param[in, out] unprocessed View of unprocessed data
-     * @param[out] token The extracted token
-     * @param[out] bytesRead Number of bytes read
-     * @return Status code
-     * @retval 0 Success
-     * @retval 1 End of file reached
-     * @retval -1 Parse Error
-     * @retval -2 Read Error
-     */
-    int Tokenizer::extractFirstToken(std::string_view& unprocessed, Token& token, int& bytesRead) {
-
-        /** @todo Identify type of token to parse */
-        TokenType type;
-        if (unprocessed.find_first_of(WHITESPACE) == 0) {
-            type = TokenType::Whitespace;
-        } else if (unprocessed.find_first_of(DELIMITER) == 0 && unprocessed[1] == '=') {
-            type = TokenType::Delimiter;
-        } else if (false) {
-            type = TokenType::Operator;
-        } else if (false) {
-            type = TokenType::Keyword;
-        } else {
-            type = TokenType::Identifier;
-        }
-
-        /** @todo Parse token */
-
-        return 0;
-    }
 }

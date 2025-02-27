@@ -95,19 +95,6 @@ namespace imperium_lang {
          */
         int refillBuffer(std::string_view& unprocessed, int& bytesRead, auto& source);
 
-        /**
-         * @brief Extracts the next token from the buffer
-         * 
-         * @param[in, out] unprocessed View of unprocessed data
-         * @param[out] token The extracted token
-         * @param[out] bytesRead Number of bytes read
-         * @return Status code
-         * @retval 0 Success
-         * @retval 1 End of file reached
-         * @retval -1 Parse Error
-         * @retval -2 Read Error
-         */
-        int extractFirstToken(std::string_view& unprocessed, Token& token, int& bytesRead);
     };
 
 }

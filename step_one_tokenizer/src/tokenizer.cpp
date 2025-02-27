@@ -25,7 +25,7 @@ namespace {
         "+"sv, "-"sv, "*"sv, "/"sv, "%"sv, "="sv, "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
     };
 
-    constexpr auto DELIMITER_TOKENS = ";,.(){}[]"sv;
+    constexpr auto DELIMITER = ";,.(){}[]"sv;
 }
 
 namespace imperium_lang {

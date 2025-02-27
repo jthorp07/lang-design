@@ -25,9 +25,7 @@ namespace {
         "+"sv, "-"sv, "*"sv, "/"sv, "%"sv, "="sv, "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
     };
 
-    static const std::unordered_set<std::string_view> DELIMITER_TOKENS{
-        ";"sv, ","sv, "."sv, "("sv, ")"sv, "{"sv, "}"sv, "["sv, "]"sv
-    };
+    constexpr auto DELIMITER_TOKENS = ";,.(){}[]"sv;
 }
 
 namespace imperium_lang {

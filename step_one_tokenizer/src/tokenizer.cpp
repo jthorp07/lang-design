@@ -127,4 +127,25 @@ namespace imperium_lang {
 
         return 0;
     }
+
+    /**
+     * @brief Extracts the next token from the buffer
+     * 
+     * @param[in, out] unprocessed View of unprocessed data
+     * @param[out] token The extracted token
+     * @param[out] bytesRead Number of bytes read
+     * @return Status code
+     * @retval 0 Success
+     * @retval 1 End of file reached
+     * @retval -1 Parse Error
+     * @retval -2 Read Error
+     */
+    int Tokenizer::extractFirstToken(std::string_view& unprocessed, Token& token, int& bytesRead) {
+
+        /** @todo Identify type of token to parse */
+
+        /** @todo Parse token */
+
+        return 0;
+    }
 }

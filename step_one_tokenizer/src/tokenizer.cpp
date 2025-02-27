@@ -10,19 +10,20 @@
 #include <iostream>
 #include <string>
 #include <string_view>
-#include <unordered_set>
+#include <array>
 
 // Allow the use of string_view literals
 using namespace std::literals::string_view_literals;
 
 namespace {
-    static const std::unordered_set<std::string_view> KEYWORD_TOKENS{
+    constexpr std::array<std::string_view, 11> KEYWORD_TOKENS{
         "if"sv, "else"sv, "while"sv, "for"sv, "return"sv, "function"sv, "var"sv, "const"sv,
         "class"sv, "import"sv, "export"sv
     };
 
-    static const std::unordered_set<std::string_view> OPERATOR_TOKENS{
-        "+"sv, "-"sv, "*"sv, "/"sv, "%"sv, "="sv, "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
+    constexpr std::array<std::string_view, 14> OPERATOR_TOKENS{
+        "+"sv, "-"sv, "*"sv, "/"sv, "%"sv, "="sv, "=="sv, "!="sv, "<"sv, "<="sv, ">"sv,
+        ">="sv, "&&"sv, "||"sv
     };
 
     constexpr auto DELIMITER = ";,.(){}[]"sv;

@@ -81,20 +81,6 @@ namespace imperium_lang {
          * @retval -2 Read Error
          */
         int tokenize(std::vector<Token>& tokens);
-    private:
-        /**
-         * @brief Shifts unprocessed data to the start of the buffer, then refills
-         *        the buffer with the next data from the source file.
-         * 
-         * @param[in, out] unprocessed View of unprocessed data
-         * @param[out] bytesRead Number of bytes read
-         * @return Status code
-         * @retval 0 Success
-         * @retval 1 End of file reached
-         * @retval -1 Read Error
-         */
-        int refillBuffer(std::string_view& unprocessed, int& bytesRead, auto& source);
-
     };
 
 }

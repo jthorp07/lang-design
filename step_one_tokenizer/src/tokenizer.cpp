@@ -58,6 +58,21 @@ namespace {
     int extractFirstToken(std::string_view& unprocessed, imperium_lang::Token& token, int& bytesRead);
 
     /**
+     * @brief Shifts unprocessed data to the start of a buffer, then refills
+     *        the buffer with the next data from the source file.
+     * 
+     * @param[in, out] unprocessed View of unprocessed data
+     * @param[in, out] buffer Buffer to fill
+     * @param[out] bytesRead Number of bytes read
+     * @param[in] source The source stream to read from
+     * @return Status code
+     * @retval 0 Success
+     * @retval 1 End of file reached
+     * @retval -1 Read Error
+     */
+    int refillBuffer(std::string_view& unprocessed, auto& buffer, int& bytesRead, auto& source);
+
+    /**
      * @brief Extracts the next token from the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
@@ -86,6 +101,41 @@ namespace {
         }
 
         /** @todo Parse token */
+
+        return 0;
+    }
+
+    /**
+     * @brief Shifts unprocessed data to the start of a buffer, then refills
+     *        the buffer with the next data from the source file.
+     * 
+     * @param[in, out] unprocessed View of unprocessed data
+     * @param[in, out] buffer Buffer to fill
+     * @param[out] bytesRead Number of bytes read
+     * @param[in] source The source stream to read from
+     * @return Status code
+     * @retval 0 Success
+     * @retval 1 End of file reached
+     * @retval -1 Read Error
+     */
+    int refillBuffer(std::string_view& unprocessed, auto& buffer, int& bytesRead, auto& source) {
+
+        /** @todo Move all unprocessed data to start of buffer */
+        std::copy(unprocessed.cbegin(), unprocessed.cend(), buffer.begin());
+
+        /** @todo Read new data into buffer */
+        source.read(buffer.data() + unprocessed.size(), imperium_lang::BUFFER_SIZE - unprocessed.size());
+        bytesRead = source.gcount();
+        if (bytesRead <= 0) {
+            std::cerr << "Error: Failed to read from source file.\n";
+            return -1;
+        }
+
+        /** @todo Reassign unprocessed to cover all content in buffer */
+        unprocessed = std::string_view(buffer.cbegin(), unprocessed.size() + bytesRead);
+        if (source.eof()) {
+            return 1;
+        }
 
         return 0;
     }
@@ -135,14 +185,14 @@ namespace imperium_lang {
         /** @todo Initialize buffer with start of source data */
         int bytesRead;
         std::string_view unprocessed;
-        auto refillStatus = refillBuffer(unprocessed, bytesRead, source);
+        auto refillStatus = refillBuffer(unprocessed, buffer, bytesRead, source);
         if (refillStatus == -1) {
             std::cerr << "Error: Failed to read from source file.\n";
             return -2;
         }
 
         /** @todo Finish main parse loop */
-        bool doneReading = refillStatus == 1;;
+        bool doneReading = refillStatus == 1;
         while (true) {
             /** @todo Parse tokens from start of content */
 
@@ -150,40 +200,6 @@ namespace imperium_lang {
 
             /** @todo If end of file is reached, finish tokenizing */
             break;
-        }
-
-        return 0;
-    }
-
-    /**
-     * @brief Shifts unprocessed data to the start of the buffer, then refills
-     *        the buffer with the next data from the source file.
-     * 
-     * @param[in, out] unprocessed View of unprocessed data
-     * @param[out] bytesRead Number of bytes read
-     * @param[in] source The source stream to read from
-     * @return Status code
-     * @retval 0 Success
-     * @retval 1 End of file reached
-     * @retval -1 Read Error
-     */
-    int Tokenizer::refillBuffer(std::string_view& unprocessed, int& bytesRead, auto& source) {
-
-        /** @todo Move all unprocessed data to start of buffer */
-        std::copy(unprocessed.cbegin(), unprocessed.cend(), buffer.begin());
-
-        /** @todo Read new data into buffer */
-        source.read(buffer.data() + unprocessed.size(), BUFFER_SIZE - unprocessed.size());
-        bytesRead = source.gcount();
-        if (bytesRead <= 0) {
-            std::cerr << "Error: Failed to read from source file.\n";
-            return -1;
-        }
-
-        /** @todo Reassign unprocessed to cover all content in buffer */
-        unprocessed = std::string_view(buffer.cbegin(), unprocessed.size() + bytesRead);
-        if (source.eof()) {
-            return 1;
         }
 
         return 0;

@@ -73,6 +73,13 @@ namespace {
     int refillBuffer(std::string_view& unprocessed, auto& buffer, int& bytesRead, auto& source);
 
     /**
+     * @brief Determines if the next token is an operator
+     * 
+     * @param[in] unprocessed View of unprocessed data
+     */
+    bool isOperatorFirst(const std::string_view& unprocessed);
+
+    /**
      * @brief Extracts the next token from the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
@@ -92,7 +99,7 @@ namespace {
             type = imperium_lang::TokenType::Whitespace;
         } else if (unprocessed.find_first_of(DELIMITER) == 0 && unprocessed[1] == '=') {
             type = imperium_lang::TokenType::Delimiter;
-        } else if (false) {
+        } else if (isOperatorFirst(unprocessed)) {
             type = imperium_lang::TokenType::Operator;
         } else if (false) {
             type = imperium_lang::TokenType::Keyword;
@@ -138,6 +145,18 @@ namespace {
         }
 
         return 0;
+    }
+
+    /**
+     * @brief Determines if the next token is an operator
+     * 
+     * @param[in] unprocessed View of unprocessed data
+     */
+    bool isOperatorFirst(const std::string_view& unprocessed) {
+        return std::any_of(OPERATOR_TOKENS.begin(), OPERATOR_TOKENS.end(), 
+            [&unprocessed](const auto& token) {
+                return unprocessed.find(token) == 0;
+            });
     }
 }
 

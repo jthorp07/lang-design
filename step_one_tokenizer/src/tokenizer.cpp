@@ -80,6 +80,13 @@ namespace {
     bool isOperatorFirst(const std::string_view& unprocessed);
 
     /**
+     * @brief Determines if the next token is a keyword
+     * 
+     * @param[in] unprocessed View of unprocessed data
+     */
+    bool isKeywordFirst(const std::string_view& unprocessed);
+
+    /**
      * @brief Extracts the next token from the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
@@ -101,7 +108,7 @@ namespace {
             type = imperium_lang::TokenType::Delimiter;
         } else if (isOperatorFirst(unprocessed)) {
             type = imperium_lang::TokenType::Operator;
-        } else if (false) {
+        } else if (isKeywordFirst(unprocessed)) {
             type = imperium_lang::TokenType::Keyword;
         } else {
             type = imperium_lang::TokenType::Identifier;
@@ -154,6 +161,18 @@ namespace {
      */
     bool isOperatorFirst(const std::string_view& unprocessed) {
         return std::any_of(OPERATOR_TOKENS.begin(), OPERATOR_TOKENS.end(), 
+            [&unprocessed](const auto& token) {
+                return unprocessed.find(token) == 0;
+            });
+    }
+
+    /**
+     * @brief Determines if the next token is a keyword
+     * 
+     * @param[in] unprocessed View of unprocessed data
+     */
+    bool isKeywordFirst(const std::string_view& unprocessed) {
+        return std::any_of(KEYWORD_TOKENS.begin(), KEYWORD_TOKENS.end(), 
             [&unprocessed](const auto& token) {
                 return unprocessed.find(token) == 0;
             });

@@ -26,6 +26,7 @@ namespace imperium_lang {
         Whitespace,
         EndOfFile,
         Delimiter,
+        Invalid,
     };
 
     /**
@@ -45,13 +46,14 @@ namespace imperium_lang {
             case Whitespace: return "whitespace";
             case EndOfFile: return "end-of-file";
             case Delimiter: return "delimiter";
-            default: return "unknown";
+            case Invalid: return "invalid";
+            default: return "invalid";
         }
     }
 
     struct Token {
-        const TokenType type;
-        const std::string value;
+        TokenType type;
+        std::string value;
     };
 
     /**

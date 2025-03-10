@@ -95,20 +95,6 @@ namespace {
     bool isCommentFirst(const std::string_view& unprocessed);
 
     /**
-     * @brief Extracts a whitespace token from the beginning of the buffer
-     * 
-     * @param[in, out] unprocessed View of unprocessed data
-     * @param[out] content The extracted whitespace content
-     * @param[out] bytesRead Number of bytes read
-     * @return Status code
-     * @retval 0 Success
-     * @retval 1 End of file reached
-     * @retval -1 Parse Error
-     * @retval -2 Read Error
-     */
-    int extractWhitespaceToken(std::string_view& unprocessed, std::string& content, int& bytesRead);
-
-    /**
      * @brief Extracts the next token from the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
@@ -141,7 +127,14 @@ namespace {
         /** @todo Parse token */
         switch(type) {
             case imperium_lang::TokenType::Whitespace:
-                return extractWhitespaceToken(unprocessed, content, bytesRead);
+                auto end = unprocessed.find_first_not_of(WHITESPACE);
+                if (end == std::string_view::npos) {
+                    end = unprocessed.size();
+                }
+                content = std::string(unprocessed.substr(0, end));
+                unprocessed.remove_prefix(end);
+        
+                return 0;
             default:
                 std::cerr << "Error: Invalid token type\n";
                 return -1;
@@ -216,29 +209,6 @@ namespace {
      */
     bool isCommentFirst(const std::string_view& unprocessed) {
         return unprocessed.find("//") == 0 || unprocessed.find("/*") == 0;
-    }
-
-    /**
-     * @brief Extracts a whitespace token from the beginning og the buffer
-     * 
-     * @param[in, out] unprocessed View of unprocessed data
-     * @param[out] content The extracted whitespace value
-     * @param[out] bytesRead Number of bytes read
-     * @return Status code
-     * @retval 0 Success
-     * @retval 1 End of file reached
-     * @retval -1 Parse Error
-     * @retval -2 Read Error
-     */
-    int extractWhitespaceToken(std::string_view& unprocessed, std::string& content, int& bytesRead) {
-        auto end = unprocessed.find_first_not_of(WHITESPACE);
-        if (end == std::string_view::npos) {
-            end = unprocessed.size();
-        }
-        content = std::string(unprocessed.substr(0, end));
-        unprocessed.remove_prefix(end);
-
-        return 0;
     }
 }
 

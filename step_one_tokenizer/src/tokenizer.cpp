@@ -47,7 +47,8 @@ namespace {
      * @brief Extracts the next token from the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
-     * @param[out] token The extracted token
+     * @param[out] type The extracted token's type
+     * @param[out] content The extracted token's content
      * @param[out] bytesRead Number of bytes read
      * @return Status code
      * @retval 0 Success
@@ -55,7 +56,7 @@ namespace {
      * @retval -1 Parse Error
      * @retval -2 Read Error
      */
-    int extractFirstToken(std::string_view& unprocessed, imperium_lang::Token& token, int& bytesRead);
+    int extractFirstToken(std::string_view& unprocessed, imperium_lang::TokenType& type, std::string& content, int& bytesRead);
 
     /**
      * @brief Shifts unprocessed data to the start of a buffer, then refills
@@ -87,10 +88,10 @@ namespace {
     bool isKeywordFirst(const std::string_view& unprocessed);
 
     /**
-     * @brief Extracts the next token from the buffer
+     * @brief Extracts a whitespace token from the beginning of the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
-     * @param[out] token The extracted token
+     * @param[out] content The extracted whitespace content
      * @param[out] bytesRead Number of bytes read
      * @return Status code
      * @retval 0 Success
@@ -98,10 +99,24 @@ namespace {
      * @retval -1 Parse Error
      * @retval -2 Read Error
      */
-    int extractFirstToken(std::string_view& unprocessed, imperium_lang::Token& token, int& bytesRead) {
+    int extractWhitespaceToken(std::string_view& unprocessed, std::string& content, int& bytesRead);
+
+    /**
+     * @brief Extracts the next token from the buffer
+     * 
+     * @param[in, out] unprocessed View of unprocessed data
+     * @param[out] type The extracted token's type
+     * @param[out] content The extracted token's content
+     * @param[out] bytesRead Number of bytes read
+     * @return Status code
+     * @retval 0 Success
+     * @retval 1 End of file reached
+     * @retval -1 Parse Error
+     * @retval -2 Read Error
+     */
+    int extractFirstToken(std::string_view& unprocessed, imperium_lang::TokenType& type, std::string& content, int& bytesRead) {
 
         /** @todo Identify type of token to parse */
-        imperium_lang::TokenType type;
         if (unprocessed.find_first_of(WHITESPACE) == 0) {
             type = imperium_lang::TokenType::Whitespace;
         } else if (unprocessed.find_first_of(DELIMITER) == 0 && unprocessed[1] == '=') {
@@ -115,6 +130,13 @@ namespace {
         }
 
         /** @todo Parse token */
+        switch(type) {
+            case imperium_lang::TokenType::Whitespace:
+                return extractWhitespaceToken(unprocessed, content, bytesRead);
+            default:
+                std::cerr << "Error: Invalid token type\n";
+                return -1;
+        }
 
         return 0;
     }
@@ -176,6 +198,29 @@ namespace {
             [&unprocessed](const auto& token) {
                 return unprocessed.find(token) == 0;
             });
+    }
+
+    /**
+     * @brief Extracts a whitespace token from the beginning og the buffer
+     * 
+     * @param[in, out] unprocessed View of unprocessed data
+     * @param[out] content The extracted whitespace value
+     * @param[out] bytesRead Number of bytes read
+     * @return Status code
+     * @retval 0 Success
+     * @retval 1 End of file reached
+     * @retval -1 Parse Error
+     * @retval -2 Read Error
+     */
+    int extractWhitespaceToken(std::string_view& unprocessed, std::string& content, int& bytesRead) {
+        auto end = unprocessed.find_first_not_of(WHITESPACE);
+        if (end == std::string_view::npos) {
+            end = unprocessed.size();
+        }
+        content = std::string(unprocessed.substr(0, end));
+        unprocessed.remove_prefix(end);
+
+        return 0;
     }
 }
 

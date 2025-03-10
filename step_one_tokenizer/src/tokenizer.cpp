@@ -88,6 +88,13 @@ namespace {
     bool isKeywordFirst(const std::string_view& unprocessed);
 
     /**
+     * @brief Determines if the next token is a comment
+     * 
+     * @param[in] unprocessed View of unprocessed data
+     */
+    bool isCommentFirst(const std::string_view& unprocessed);
+
+    /**
      * @brief Extracts a whitespace token from the beginning of the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
@@ -125,6 +132,8 @@ namespace {
             type = imperium_lang::TokenType::Operator;
         } else if (isKeywordFirst(unprocessed)) {
             type = imperium_lang::TokenType::Keyword;
+        } else if (isCommentFirst(unprocessed)) {
+            type = imperium_lang::TokenType::Comment;
         } else {
             type = imperium_lang::TokenType::Identifier;
         }
@@ -198,6 +207,15 @@ namespace {
             [&unprocessed](const auto& token) {
                 return unprocessed.find(token) == 0;
             });
+    }
+
+    /**
+     * @brief Determines if the next token is a comment
+     * 
+     * @param[in] unprocessed View of unprocessed data
+     */
+    bool isCommentFirst(const std::string_view& unprocessed) {
+        return unprocessed.find("//") == 0 || unprocessed.find("/*") == 0;
     }
 
     /**

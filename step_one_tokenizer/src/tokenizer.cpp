@@ -125,19 +125,23 @@ namespace {
         }
 
         /** @todo Parse token */
-        switch(type) {
-            case imperium_lang::TokenType::Whitespace:
-                auto end = unprocessed.find_first_not_of(WHITESPACE);
-                if (end == std::string_view::npos) {
-                    end = unprocessed.size();
-                }
-                content = std::string(unprocessed.substr(0, end));
-                unprocessed.remove_prefix(end);
-        
-                return 0;
-            default:
-                std::cerr << "Error: Invalid token type\n";
-                return -1;
+        if (type == imperium_lang::TokenType::Whitespace) {
+            std::size_t end = unprocessed.find_first_not_of(WHITESPACE);
+            if (end == std::string_view::npos) {
+                end = unprocessed.size();
+            }
+            content = std::string(unprocessed.substr(0, end));
+            unprocessed.remove_prefix(end);
+    
+            return 0;
+        } else if (type == imperium_lang::TokenType::Delimiter) {
+            content = std::string(unprocessed.substr(0, 1));
+            unprocessed.remove_prefix(1);
+    
+            return 0;
+        } else {
+            std::cerr << "Error: Invalid token type\n";
+            return -1;
         }
 
         return 0;

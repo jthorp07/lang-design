@@ -139,6 +139,25 @@ namespace {
             unprocessed.remove_prefix(1);
     
             return 0;
+        } else if (type == imperium_lang::TokenType::Comment) {
+            if (unprocessed[1] == '/') {
+                std::size_t end = unprocessed.find('\n');
+                if (end == std::string_view::npos) {
+                    end = unprocessed.size();
+                } else {
+                    --end;
+                }
+                content = std::string(unprocessed.substr(0, end));
+                unprocessed.remove_prefix(end);
+            } else if (unprocessed[1] == '*') {
+                std::size_t end = unprocessed.find("*/");
+                if (end == std::string_view::npos) {
+                    end = unprocessed.size();
+                }
+                content = std::string(unprocessed.substr(0, end + 2));
+                unprocessed.remove_prefix(end + 2);
+            }
+            return 0;
         } else {
             std::cerr << "Error: Invalid token type\n";
             return -1;

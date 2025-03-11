@@ -107,7 +107,9 @@ namespace {
     int extractFirstToken(std::string_view& unprocessed, imperium_lang::TokenType& type, std::string& content, int& bytesRead) {
 
         /** @todo Identify type of token to parse */
-        if (unprocessed.find_first_of(WHITESPACE) == 0) {
+        if (unprocessed.empty()) {
+            type = imperium_lang::TokenType::EndOfFile;
+        } else if (unprocessed.find_first_of(WHITESPACE) == 0) {
             type = imperium_lang::TokenType::Whitespace;
         } else if (unprocessed.find_first_of(DELIMITER) == 0) {
             type = imperium_lang::TokenType::Delimiter;
@@ -122,7 +124,11 @@ namespace {
         }
 
         /** @todo Parse token */
-        if (type == imperium_lang::TokenType::Whitespace) {
+        if (type == imperium_lang::TokenType::EndOfFile) {
+            content = "";
+
+            return 1;
+        } else if (type == imperium_lang::TokenType::Whitespace) {
             std::size_t end = unprocessed.find_first_not_of(WHITESPACE);
             if (end == std::string_view::npos) {
                 end = unprocessed.size();
@@ -185,11 +191,11 @@ namespace {
             return 0;
         } else {
             std::cerr << "Error: Invalid token type\n";
-            
+
             return -1;
         }
 
-        return 0;
+        return -1; // Error case: should never reach here
     }
 
     /**
@@ -291,9 +297,9 @@ namespace imperium_lang {
         }
     
         /** @todo Initialize buffer with start of source data */
-        int bytesRead;
+        int totalBytesRead;
         std::string_view unprocessed;
-        auto refillStatus = refillBuffer(unprocessed, buffer, bytesRead, source);
+        auto refillStatus = refillBuffer(unprocessed, buffer, totalBytesRead, source);
         if (refillStatus == -1) {
             std::cerr << "Error: Failed to read from source file.\n";
             return -2;
@@ -303,11 +309,31 @@ namespace imperium_lang {
         bool doneReading = refillStatus == 1;
         while (true) {
             /** @todo Parse tokens from start of content */
+            Token token;
+            int bytesRead;
+            int extractStatus = extractFirstToken(unprocessed, token.type, token.value, bytesRead);
+            if (extractStatus == -1) {
+                std::cerr << "Parse Error: Failed to extract token.\n";
+                return -1;
+            } else if (extractStatus == -2) {
+                std::cerr << "Read Error: Failed to read from source file.\n";
+                return -2;
+            } else if (extractStatus == 1) {
+                break;
+            } else if (extractStatus == 0) {
+                tokens.push_back(token);
+            }
 
             /** @todo If buffer near empty and not done reading, refill buffer */
-
-            /** @todo If end of file is reached, finish tokenizing */
-            break;
+            if (unprocessed.size() < BLOCK_SIZE && !doneReading) {
+                refillStatus = refillBuffer(unprocessed, buffer, totalBytesRead, source);
+                if (refillStatus == -1) {
+                    std::cerr << "Error: Failed to read from source file.\n";
+                    return -2;
+                } else if (refillStatus == 1) {
+                    doneReading = true;
+                }
+            }
         }
 
         return 0;

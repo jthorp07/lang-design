@@ -31,6 +31,12 @@ int main(int argc, char** argv) {
         for (const auto& token : tokens) {
             std::cout << "Type: " << imperium_lang::tokenTypeToString(token.type) << ", Value: " << token.value << "\n";
         }
+
+        std::cout << "Reconstructing file from tokens:\n";
+        for (const auto& token : tokens) {
+            std::cout << token.value;
+        }
+        std::cout << "Done.\n";
     }
 
     return 0;

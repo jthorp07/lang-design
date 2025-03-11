@@ -29,21 +29,25 @@ namespace {
         "import"sv, "export"sv, "library"sv, 
     };
 
-    constexpr auto OPERATOR_TOKENS = {
-        /* Arithmetic */
-        "+"sv, "-"sv, "*"sv, "/"sv, "%"sv,
-        /* Mutator */
-        "="sv, "++"sv, "--"sv,
-        /* Bitwise */
-        "&"sv, "|"sv, "^"sv, "~"sv,
-        /* Boolean */
-        "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
-    };
+    // constexpr auto OPERATOR_TOKENS = {
+    //     /* Arithmetic */
+    //     "+"sv, "-"sv, "*"sv, "/"sv, "%"sv,
+    //     /* Mutator */
+    //     "="sv, "++"sv, "--"sv,
+    //     /* Bitwise */
+    //     "&"sv, "|"sv, "^"sv, "~"sv,
+    //     /* Boolean */
+    //     "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
+    // };
 
-    constexpr auto DELIMITER = ";,.(){}[]"sv;
+    constexpr auto DELIMITER = ";,.(){}[]<>:\"'"sv;
     constexpr auto WHITESPACE = " \n\t\r"sv;
+    constexpr auto DIGIT = "1234567890"sv;
+    constexpr auto NON_WHITESPACE_CHARACTER = 
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*_-+=|\\/?~`"sv;
+    constexpr auto ESCAPE = "\\"sv;
 
-        /**
+    /**
      * @brief Extracts the next token from the buffer
      * 
      * @param[in, out] unprocessed View of unprocessed data
@@ -73,19 +77,12 @@ namespace {
      */
     int refillBuffer(std::string_view& unprocessed, auto& buffer, int& bytesRead, auto& source);
 
-    /**
-     * @brief Determines if the next token is an operator
-     * 
-     * @param[in] unprocessed View of unprocessed data
-     */
-    bool isOperatorFirst(const std::string_view& unprocessed);
-
-    /**
-     * @brief Determines if the next token is a keyword
-     * 
-     * @param[in] unprocessed View of unprocessed data
-     */
-    bool isKeywordFirst(const std::string_view& unprocessed);
+    // /**
+    //  * @brief Determines if the next token is a keyword
+    //  * 
+    //  * @param[in] unprocessed View of unprocessed data
+    //  */
+    // bool isKeywordFirst(const std::string_view& unprocessed);
 
     /**
      * @brief Determines if the next token is a comment
@@ -112,16 +109,16 @@ namespace {
         /** @todo Identify type of token to parse */
         if (unprocessed.find_first_of(WHITESPACE) == 0) {
             type = imperium_lang::TokenType::Whitespace;
-        } else if (unprocessed.find_first_of(DELIMITER) == 0 && unprocessed[1] == '=') {
+        } else if (unprocessed.find_first_of(DELIMITER) == 0) {
             type = imperium_lang::TokenType::Delimiter;
-        } else if (isOperatorFirst(unprocessed)) {
-            type = imperium_lang::TokenType::Operator;
-        } else if (isKeywordFirst(unprocessed)) {
-            type = imperium_lang::TokenType::Keyword;
         } else if (isCommentFirst(unprocessed)) {
             type = imperium_lang::TokenType::Comment;
+        } else if (unprocessed.find_first_of(DIGIT) == 0 && (unprocessed.find_first_not_of(DIGIT) == unprocessed.find_first_of(WHITESPACE) || unprocessed.find_first_not_of(DIGIT) == unprocessed.find_first_of(DELIMITER))) {
+            type = imperium_lang::TokenType::Number;
+        } else if (unprocessed.find_first_of(NON_WHITESPACE_CHARACTER) == 0) {
+            type = imperium_lang::TokenType::CharSequence;
         } else {
-            type = imperium_lang::TokenType::Identifier;
+            type = imperium_lang::TokenType::Invalid;
         }
 
         /** @todo Parse token */
@@ -157,9 +154,38 @@ namespace {
                 content = std::string(unprocessed.substr(0, end + 2));
                 unprocessed.remove_prefix(end + 2);
             }
+
+            return 0;
+        } else if (type == imperium_lang::TokenType::Number) {
+            std::size_t end = unprocessed.find_first_not_of(DIGIT);
+            if (end == std::string_view::npos) {
+                end = unprocessed.size();
+            }
+            content = std::string(unprocessed.substr(0, end));
+            unprocessed.remove_prefix(end);
+    
+            return 0;
+        } else if (type == imperium_lang::TokenType::CharSequence) {
+            std::size_t end = unprocessed.find_first_not_of(NON_WHITESPACE_CHARACTER);
+            if (end == std::string_view::npos) {
+                end = unprocessed.size();
+            }
+            content = std::string(unprocessed.substr(0, end));
+            unprocessed.remove_prefix(end);
+    
+            return 0;
+        } else if (type == imperium_lang::TokenType::CharSequence) {
+            std::size_t end = std::min(unprocessed.find_first_of(WHITESPACE), unprocessed.find_first_of(DELIMITER));
+            if (end == std::string_view::npos) {
+                end = unprocessed.size();
+            }
+            content = std::string(unprocessed.substr(0, end));
+            unprocessed.remove_prefix(end);
+
             return 0;
         } else {
             std::cerr << "Error: Invalid token type\n";
+            
             return -1;
         }
 
@@ -201,29 +227,17 @@ namespace {
         return 0;
     }
 
-    /**
-     * @brief Determines if the next token is an operator
-     * 
-     * @param[in] unprocessed View of unprocessed data
-     */
-    bool isOperatorFirst(const std::string_view& unprocessed) {
-        return std::any_of(OPERATOR_TOKENS.begin(), OPERATOR_TOKENS.end(), 
-            [&unprocessed](const auto& token) {
-                return unprocessed.find(token) == 0;
-            });
-    }
-
-    /**
-     * @brief Determines if the next token is a keyword
-     * 
-     * @param[in] unprocessed View of unprocessed data
-     */
-    bool isKeywordFirst(const std::string_view& unprocessed) {
-        return std::any_of(KEYWORD_TOKENS.begin(), KEYWORD_TOKENS.end(), 
-            [&unprocessed](const auto& token) {
-                return unprocessed.find(token) == 0;
-            });
-    }
+    // /**
+    //  * @brief Determines if the next token is a keyword
+    //  * 
+    //  * @param[in] unprocessed View of unprocessed data
+    //  */
+    // bool isKeywordFirst(const std::string_view& unprocessed) {
+    //     return std::any_of(KEYWORD_TOKENS.begin(), KEYWORD_TOKENS.end(), 
+    //         [&unprocessed](const auto& token) {
+    //             return unprocessed.find(token) == 0;
+    //         });
+    // }
 
     /**
      * @brief Determines if the next token is a comment

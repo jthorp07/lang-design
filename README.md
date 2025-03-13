@@ -101,32 +101,26 @@ like to see the following file types all present:
 [return to top](#an-unnamed-language)
 ## Reserved Words
 
-- **Language Constructs:**
-    - class
-    - enum
-    - continuation
-    - signal\<type>
-    - derived\<type ...>
-- **Primitive Type Keywords:**
-    - int
-    - float
-    - array\<type>
-- **Type Modifiers:**
-    - const
-    - static
-    - ptr
-    - ref
-    - final
-- **Operators:**
-    - \+
-    - \-
-    - \*
-    - /
-    - %
-    - []
-    - \+\+
-    - \-\-
-    - ::
+Keywords
+| **ADTs** | **Primitives** | **Type Modifiers** | **Semantic** | **Compilation** | **Control Flow** |
+|-|-|-|-|-|-|
+|class|int|const|callback_t|library|if
+|enum|float|final|continuation_t|module|else
+|signal|bool|static|template|import|while
+|function|char|ptr||export|do
+|regex_t|string|ref|||try
+||array||||catch
+||bits|||||
+
+Operators
+| **Arithmetic** | **Comparison** | **Boolean** | **Bitwise** | **Assignment** | **Misc** |
+|-|-|-|-|-|-|
+|+|<|!|\||=|\[\]
+|-|\>|\|\||&|+=|\:\:
+|*|<=|&&|~|-=|
+|/|\>=||<<|*=|
+|%|==||\>\>|/=|
+||!=|||%=|
 
 [return to top](#an-unnamed-language)
 ## Language Structures
@@ -140,17 +134,17 @@ The following primitives will always be available:
 | ---- | ----------- | ----- |
 | int  | 32-bit integer | |
 | float | 64-bit double precision float | |
-| char | character | TODO: Choose encoding/size |
-| string | array of characters terminated by '\0' | C string go brr |
-| function\<ret>\<params> | function primitive | |
-| byte | a single byte | |
-| ptr\<type> | pointer | |
+| bool | boolean: true or false | |
+| char | character | UTF-8 |
+| string | array of characters terminated by '\0' | |
+| array | buffer of contiguous memory. not resizeable | |
+| bits | a set of bits | |
 
 [return to top](#an-unnamed-language)
 ## Syntax Examples
 
 
-Continuation Passing (Note: Won't actually shrink the stack if compiled to C/C++)
+Continuation Passing
 ```
 // Explicit continuation struct
 int continuation fibonacci(int n) {
@@ -185,11 +179,30 @@ int fibTail(int n, int value, int nextValue) {
 Example Class Definition
 ```
 class MyClass {
-constructors:
-fields:
-properties:
-methods:
-    int myMethod();
-utilities:
+
+MyClass(); // Constructor
+
+MyClass:fromArray(array<int>); // Named constructor
+
+private int myNum; // Private field
+
+private string myName = "Bob"; // Default initialization allowed
+
+public setName(string name="Bob") // Default parameter values
+}
+```
+
+Example Signal and Derived Variables
+```
+signal int foo = 0; // Signals emit to deriving variables on reassignment
+derived int bar = foo + 1; // Recalcs on access/evaluation if signals dirtied
+
+```
+
+Example Lambda With Captures
+```
+void doSomething(function<void>(ref<int>) lambda) {
+    int someNumber = 0;
+    lambda(someNumber); // ref<> syntax only used in signature for passing convention
 }
 ```

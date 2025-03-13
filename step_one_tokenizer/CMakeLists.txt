@@ -10,7 +10,7 @@ if (NOT DECLARE_A_STRING_IMP)
 endif()
 
 # Script Targets
-add_custom_target(run 
+add_custom_target(run_one 
         COMMENT "Run with default file"
         COMMAND $<TARGET_FILE:${STEP_ONE_EXE}> ${DECLARE_A_STRING_IMP}
         DEPENDS ${STEP_ONE_EXE}

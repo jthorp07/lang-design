@@ -13,7 +13,13 @@ if(STEP_ONE)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/step_one_tokenizer)
 endif()
 
+option(STEP_TWO "Build step two" OFF)
+if(STEP_ONE)
+    message(STATUS "Adding step two build files.")
+    add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/step_two_lexer)
+endif()
+
 # Warn if no steps are selected
-if(NOT STEP_ONE)
+if(NOT STEP_ONE AND NOT STEP_TWO)
     message(WARNING "No steps selected to build.")
 endif()

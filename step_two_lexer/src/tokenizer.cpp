@@ -32,7 +32,6 @@ namespace {
         /* Semantic keywords */
         "callback_t"sv, "continuation_t"sv, "template"sv
     };
-
     constexpr auto DELIMITER = ";,.(){}[]<>:\"'"sv;
     constexpr auto WHITESPACE = " \n\t\r"sv;
     constexpr auto DIGIT = "1234567890"sv;

@@ -18,27 +18,20 @@ using namespace std::literals::string_view_literals;
 namespace {
     constexpr auto KEYWORD_TOKENS = {
         /* Control Flow */
-        "if"sv, "else"sv, "while"sv, "for"sv, "return"sv,
-        /* Declaration */
-        "class"sv, "function"sv, "var"sv,
+        "if"sv, "else"sv, "while"sv, "for"sv, "return"sv, "do"sv,
+        /* ADTs */
+        "class"sv, "function"sv, "enum"sv, "signal"sv, "regex_t"sv,
+        /* Access Modifiers */
+        "public"sv, "private"sv, "protected"sv,
         /* Primitive Types */
-        "int"sv, "string"sv, "bool"sv, "char"sv, "float"sv, "array"sv
+        "int"sv, "string"sv, "bool"sv, "char"sv, "float"sv, "array"sv, "bits"sv,
         /* Type Modifiers */
-        "const"sv, "static"sv, "ptr"sv, "ref"sv
+        "const"sv, "static"sv, "ptr"sv, "ref"sv, "final"sv,
         /* Compilation Unit Control */
-        "import"sv, "export"sv, "library"sv, 
+        "import"sv, "export"sv, "library"sv, "module"sv,
+        /* Semantic keywords */
+        "callback_t"sv, "continuation_t"sv, "template"sv
     };
-
-    // constexpr auto OPERATOR_TOKENS = {
-    //     /* Arithmetic */
-    //     "+"sv, "-"sv, "*"sv, "/"sv, "%"sv,
-    //     /* Mutator */
-    //     "="sv, "++"sv, "--"sv,
-    //     /* Bitwise */
-    //     "&"sv, "|"sv, "^"sv, "~"sv,
-    //     /* Boolean */
-    //     "=="sv, "!="sv, "<"sv, "<="sv, ">"sv, ">="sv, "&&"sv, "||"sv
-    // };
 
     constexpr auto DELIMITER = ";,.(){}[]<>:\"'"sv;
     constexpr auto WHITESPACE = " \n\t\r"sv;
@@ -76,13 +69,6 @@ namespace {
      * @retval -1 Read Error
      */
     int refillBuffer(std::string_view& unprocessed, auto& buffer, int& bytesRead, auto& source);
-
-    // /**
-    //  * @brief Determines if the next token is a keyword
-    //  * 
-    //  * @param[in] unprocessed View of unprocessed data
-    //  */
-    // bool isKeywordFirst(const std::string_view& unprocessed);
 
     /**
      * @brief Determines if the next token is a comment
@@ -212,19 +198,13 @@ namespace {
      * @retval -1 Read Error
      */
     int refillBuffer(std::string_view& unprocessed, auto& buffer, int& bytesRead, auto& source) {
-
-        /** @todo Move all unprocessed data to start of buffer */
         std::copy(unprocessed.cbegin(), unprocessed.cend(), buffer.begin());
-
-        /** @todo Read new data into buffer */
         source.read(buffer.data() + unprocessed.size(), imperium_lang::BUFFER_SIZE - unprocessed.size());
         bytesRead = source.gcount();
         if (bytesRead <= 0) {
             std::cerr << "Error: Failed to read from source file.\n";
             return -1;
         }
-
-        /** @todo Reassign unprocessed to cover all content in buffer */
         unprocessed = std::string_view(buffer.cbegin(), unprocessed.size() + bytesRead);
         if (source.eof()) {
             return 1;
@@ -232,18 +212,6 @@ namespace {
 
         return 0;
     }
-
-    // /**
-    //  * @brief Determines if the next token is a keyword
-    //  * 
-    //  * @param[in] unprocessed View of unprocessed data
-    //  */
-    // bool isKeywordFirst(const std::string_view& unprocessed) {
-    //     return std::any_of(KEYWORD_TOKENS.begin(), KEYWORD_TOKENS.end(), 
-    //         [&unprocessed](const auto& token) {
-    //             return unprocessed.find(token) == 0;
-    //         });
-    // }
 
     /**
      * @brief Determines if the next token is a comment
@@ -276,27 +244,11 @@ namespace imperium_lang {
     int Tokenizer::tokenize(std::vector<Token>& tokens) {
 
         tokens.clear();
-        
-        /** 
-            @todo Implement the tokenization algorithm
-
-            Algorithm:
-            1. Open stream to source file
-            2. Fill buffer with first chunk of data from source
-            3. Enter main parse loop:
-                a. Parse tokens from buffer
-                b. If buffer is near empty and not done reading, refill buffer
-                c. If end of file is reached, finish tokenizing
-        */
-
-        /** @todo Open stream to source file */
         std::ifstream source(sourceFile);
         if (!source) {
             std::cerr << "Error: Failed to open source file.\n";
             return -2;
         }
-    
-        /** @todo Initialize buffer with start of source data */
         int totalBytesRead;
         std::string_view unprocessed;
         auto refillStatus = refillBuffer(unprocessed, buffer, totalBytesRead, source);
@@ -304,11 +256,8 @@ namespace imperium_lang {
             std::cerr << "Error: Failed to read from source file.\n";
             return -2;
         }
-
-        /** @todo Finish main parse loop */
         bool doneReading = refillStatus == 1;
         while (true) {
-            /** @todo Parse tokens from start of content */
             Token token;
             int bytesRead;
             int extractStatus = extractFirstToken(unprocessed, token.type, token.value, bytesRead);
@@ -323,8 +272,6 @@ namespace imperium_lang {
             } else if (extractStatus == 0) {
                 tokens.push_back(token);
             }
-
-            /** @todo If buffer near empty and not done reading, refill buffer */
             if (unprocessed.size() < BLOCK_SIZE && !doneReading) {
                 refillStatus = refillBuffer(unprocessed, buffer, totalBytesRead, source);
                 if (refillStatus == -1) {
@@ -338,5 +285,4 @@ namespace imperium_lang {
 
         return 0;
     }
-
 }

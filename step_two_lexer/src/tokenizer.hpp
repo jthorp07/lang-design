@@ -25,6 +25,7 @@ namespace imperium_lang {
         Number,
         Invalid,
         EndOfFile,
+        ReservedWord,
     };
 
     /**

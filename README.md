@@ -102,15 +102,15 @@ like to see the following file types all present:
 ## Reserved Words
 
 Keywords
-| **ADTs** | **Primitives** | **Type Modifiers** | **Semantic** | **Compilation** | **Control Flow** |
-|-|-|-|-|-|-|
-|class|int|const|callback_t|library|if
-|enum|float|final|continuation_t|module|else
-|signal|bool|static|template|import|while
-|function|char|ptr||export|do
-|regex_t|string|ref|||try
-||array||||catch
-||bits|||||
+| **ADTs** | **Primitives** | **Type Modifiers** | **Access Modifiers** | **Semantic** | **Compilation** | **Control Flow** |
+|-|-|-|-|-|-|-|
+|class|int|const|public|callback_t|library|if
+|enum|float|final|private|continuation_t|module|else
+|signal|bool|static|protected|template|import|while
+|function|char|ptr|||export|do
+|regex_t|string|ref||||try
+||array|||||catch
+||bits|||||for
 
 Operators
 | **Arithmetic** | **Comparison** | **Boolean** | **Bitwise** | **Assignment** | **Misc** |

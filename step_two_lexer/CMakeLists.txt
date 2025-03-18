@@ -2,7 +2,7 @@
 set(STEP_TWO_EXE step_two)
 add_executable(${STEP_TWO_EXE})
 set_target_properties(${STEP_TWO_EXE} PROPERTIES VERSION 0.0.0 SOVERSION 0)
-target_sources(${STEP_TWO_EXE} PRIVATE src/step_one.cpp src/tokenizer.cpp)
+target_sources(${STEP_TWO_EXE} PRIVATE src/step_two.cpp src/tokenizer.cpp)
 
 if (NOT DECLARE_A_STRING_IMP)
     set(DECLARE_A_STRING_IMP "${CMAKE_SOURCE_DIR}/test_data/declare_a_string.imp")

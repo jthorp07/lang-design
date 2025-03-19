@@ -5,6 +5,7 @@
  */
 
 #include "tokenizer.hpp"
+#include "reserved_word_trie.hpp"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -162,6 +163,9 @@ namespace {
                 end = unprocessed.size();
             }
             content = std::string(unprocessed.substr(0, end));
+            if (isReservedWord(content)) {
+                type = imperium_lang::TokenType::ReservedWord;
+            }
             unprocessed.remove_prefix(end);
     
             return 0;

@@ -75,7 +75,7 @@ namespace {
         return trie;
     }
 
-    constexpr Trie reservedWordTrie = buildTrie(RESERVED_WORDS);
+    constexpr Trie RESERVED_WORD_TRIE = buildTrie(RESERVED_WORDS);
 }
 
 /**
@@ -87,11 +87,11 @@ constexpr bool isReservedWord(const std::string_view& charSequence) {
     std::size_t current = 0;
     for (char c : charSequence) {
         std::size_t index = static_cast<std::size_t>(c);
-        if (reservedWordTrie.nodes[current].children[index] == 0)
+        if (RESERVED_WORD_TRIE.nodes[current].children[index] == 0)
             return false;
-        current = reservedWordTrie.nodes[current].children[index];
+        current = RESERVED_WORD_TRIE.nodes[current].children[index];
     }
-    return reservedWordTrie.nodes[current].isEnd;
+    return RESERVED_WORD_TRIE.nodes[current].isEnd;
 }
 
 #endif

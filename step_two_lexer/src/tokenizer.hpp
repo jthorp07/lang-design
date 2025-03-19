@@ -44,6 +44,7 @@ namespace imperium_lang {
             case EndOfFile: return "end-of-file";
             case Delimiter: return "delimiter";
             case Invalid: return "invalid";
+            case ReservedWord: return "reserved-word";
             default: return "invalid";
         }
     }

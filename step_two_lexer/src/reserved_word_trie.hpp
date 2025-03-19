@@ -31,8 +31,8 @@ namespace {
         "callback_t"sv, "continuation_t"sv, "template"sv
     };
 
-    constexpr std::size_t ALPHABET_SIZE = 256; // ASCII character set
-    constexpr std::size_t MAX_NODES = 128; // Maximum number of nodes in the trie
+    constexpr std::size_t ALPHABET_SIZE = 128; // ASCII character set
+    constexpr std::size_t MAX_NODES = 256; // Maximum number of nodes in the trie. Increase if needed.
 
     struct TrieNode {
         bool isEnd;
@@ -44,15 +44,54 @@ namespace {
         std::size_t nodeCount;
     };
 
-    constexpr Trie buildTrie() {
+    /**
+     * @brief Builds a trie at compile time
+     * 
+     * @param[in] words The words to add to the trie
+     */
+    constexpr Trie buildTrie(const auto& words) {
+
         Trie trie{};
         trie.nodes[0].isEnd = false;
+        for (std::size_t i = 0; i < ALPHABET_SIZE; ++i)
+            trie.nodes[0].children[i] = 0;
         trie.nodeCount = 1;
-        
+        for (const auto& word : words) {
+            std::size_t current = 0;
+            for (char c : word) {
+                std::size_t index = static_cast<std::size_t>(c);
+                if (trie.nodes[current].children[index] == 0) {
+                    std::size_t newNode = trie.nodeCount;
+                    trie.nodes[current].children[index] = newNode;
+                    trie.nodes[newNode].isEnd = false;
+                    for (std::size_t j = 0; j < ALPHABET_SIZE; ++j)
+                        trie.nodes[newNode].children[j] = 0;
+                    ++trie.nodeCount;
+                }
+                current = trie.nodes[current].children[index];
+            }
+            trie.nodes[current].isEnd = true;
+        }
         return trie;
     }
+
+    constexpr Trie reservedWordTrie = buildTrie(RESERVED_WORDS);
 }
 
-
+/**
+ * @brief Checks if a given character sequence is a reserved word
+ * 
+ * @param[in] charSequence The character sequence to check
+ */
+constexpr bool isReservedWord(const std::string_view& charSequence) {
+    std::size_t current = 0;
+    for (char c : charSequence) {
+        std::size_t index = static_cast<std::size_t>(c);
+        if (reservedWordTrie.nodes[current].children[index] == 0)
+            return false;
+        current = reservedWordTrie.nodes[current].children[index];
+    }
+    return reservedWordTrie.nodes[current].isEnd;
+}
 
 #endif

@@ -22,6 +22,13 @@ namespace imperium_lang {
         Operator,
     };
 
+    /**
+     * @brief Provides the string name of a `LexedTokenType`
+     * 
+     * @param[in] type The `LexedTokenType` to get the name of
+     * @return The string name of the `LexedTokenType`
+     * @retval "invalid" The token is not a known `LexedTokenType`
+     */
     constexpr std::string lexedTokenTypeName(LexedTokenType type) {
         switch (type) {
             case StringLiteral: return "string-literal";

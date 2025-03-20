@@ -62,8 +62,16 @@ namespace imperium_lang {
          * @brief Destructor
          */
         ~Lexer() = default;
+
         /**
+         * @brief Assemble primitive tokens into more context-sensitive token constructs
          * 
+         * @param[out] lexedTokens Assembled tokens
+         * @param[in] tokens Tokens to assemble
+         * @return Status code
+         * @retval 0 Success
+         * @retval -1 Parse Error
+         * @retval -2 Read Error
          */
         int lexTokens(std::vector<LexedToken> &lexedTokens, const auto& tokens);
     };

@@ -29,7 +29,7 @@ int main(int argc, char** argv) {
     } else {
         std::cout << "Tokens:\n";
         for (const auto& token : tokens) {
-            std::cout << "Type: " << imperium_lang::tokenTypeToString(token.type) << ", Value: " << token.value << "\n";
+            std::cout << "Type: " << imperium_lang::tokenTypeName(token.type) << ", Value: " << token.value << "\n";
         }
 
         std::cout << "Reconstructing file from tokens:\n";

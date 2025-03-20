@@ -35,7 +35,7 @@ namespace imperium_lang {
      * @return The string name of the `TokenType`
      * @retval "invalid" The token is not a known TokenType
      */
-    constexpr std::string tokenTypeToString(TokenType type) {
+    constexpr std::string tokenTypeName(TokenType type) {
         switch (type) {
             case CharSequence: return "char-sequence";
             case Number: return "number";

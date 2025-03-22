@@ -6,6 +6,24 @@
 
 #include "lexer.hpp"
 
+namespace {
+
+    /**
+     * @brief Assemble a string literal token
+     * 
+     * @param[in] start Start of primitive tokens to assemble
+     * @param[in] end End of primitive tokens to assemble
+     * @param[out] lexedToken Assembled string literal token
+     * @return Status code
+     * @retval 0 Sucess
+     * @retval -1 End of tokens reached
+     */
+    int assembleStringLiteral(const auto* start, const auto* end, imperium_lang::LexedToken& lexedToken) {
+        /** @todo Start should be entering delimiter, then add tokens until an end delimiter or end of tokens reached  */
+    }
+
+}
+
 namespace imperium_lang {
 
     /**

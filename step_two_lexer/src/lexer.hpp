@@ -70,8 +70,7 @@ namespace imperium_lang {
          * @param[in] tokens Tokens to assemble
          * @return Status code
          * @retval 0 Success
-         * @retval -1 Parse Error
-         * @retval -2 Read Error
+         * @retval -1 Invalid token sequence
          */
         int lexTokens(std::vector<LexedToken> &lexedTokens, const auto& tokens);
     };

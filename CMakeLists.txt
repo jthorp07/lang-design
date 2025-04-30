@@ -19,6 +19,11 @@ if(STEP_ONE)
     add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/step_two_lexer)
 endif()
 
+add_compile_options(
+    $<$<CXX_COMPILER_ID:MSVC>:/Wall>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
+)
+
 # Warn if no steps are selected
 if(NOT STEP_ONE AND NOT STEP_TWO)
     message(WARNING "No steps selected to build.")

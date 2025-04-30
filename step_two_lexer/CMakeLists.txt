@@ -18,3 +18,8 @@ add_custom_target(run_two
         USES_TERMINAL
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
 )
+
+target_compile_options(${STEP_TWO_EXE} PRIVATE
+    $<$<CXX_COMPILER_ID:MSVC>:/Wall>
+    $<$<CXX_COMPILER_ID:GNU,Clang,AppleClang>:-Wall>
+)
